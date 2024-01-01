@@ -33,8 +33,13 @@
 
 				// Vinod Sharma Coding Starts
 
-				if ($resultnoofchequeleavestype = $db->get_results("SELECT DISTINCT cps_no_of_books,cps_book_size FROM tb_printque")) {
-					$branchDetails = $db->get_row("SELECT branch.branch_name,branch.branch_address1,branch.branch_address2,suburb_name,city_place,suburb_postal_code,branch.branch_neftifsccode,branch.branch_printers FROM tb_branchdetails branch LEFT JOIN tb_suburbmaster suburb ON branch.branch_suburb_id = suburb.suburb_id LEFT JOIN tb_citymaster city ON branch.branch_city_id = city.city_id");
+				if($resultnoofchequeleavestype = $db->get_results("SELECT DISTINCT cps_no_of_books,cps_book_size FROM tb_printque")) {
+					// $branchDetails = $db->get_row("SELECT branch.branch_name,branch.branch_address1,branch.branch_address2,suburb_name,city_place,suburb_postal_code,branch.branch_neftifsccode,branch.branch_printers FROM tb_branchdetails branch LEFT JOIN tb_suburbmaster suburb ON branch.branch_suburb_id = suburb.suburb_id LEFT JOIN tb_citymaster city ON branch.branch_city_id = city.city_id");
+					$branchDetails = $db->get_row("SELECT branch.branch_name, branch.branch_address1, branch.branch_address2, suburb.suburb_name, city.city_place, suburb.suburb_postal_code, branch.branch_neftifsccode, branch.branch_printers, branch.sub_branch_code 
+                                FROM tb_branchdetails branch 
+                                LEFT JOIN tb_suburbmaster suburb ON branch.branch_suburb_id = suburb.suburb_id 
+                                LEFT JOIN tb_citymaster city ON branch.branch_city_id = city.city_id");
+
 					$printersinfo = "";
 
 					$printerDetails = $db->get_row("SELECT bank_printers from tb_bankdetails");
@@ -121,6 +126,7 @@
 											$slipCounter++;
 										}
 									}
+									
 
 									$noofbooks = 1;
 									for ($j = 0; $j < count($firstrequestsliprow); $j++) {
@@ -247,7 +253,7 @@
 					echo "No Records Left For Printing";
 				}
 
-				function insertIntoPrintCollection($results) {
+				function insertIntoPrintCollection($results) { 
 					global $db;
 
 					//Insert data into print collection (Successfully printed records)
@@ -1151,6 +1157,7 @@
 					// echo "<pre>";
 					// print_r($arrThirdChequeData);
 					// echo "</pre><br><br>";
+					
 					// Positions
 					$arrPos = array(); 
 					$arrPos[0] = array("BankAddrY" => 12, "AcnoY" => 49.5, "Name" => 40.5, "VUniqReq" => 76, "MICRY" => 86.7, "bearer" => 23);
@@ -1175,7 +1182,11 @@
 						if($arrChqData[$i][2] == "")
 							break;
 						$pdf->SetFont('Arial', 'B', 6.5);
-						$branchDetails = $db->get_row("SELECT b.branch_name,b.branch_telephone1,b.branch_telephone2,b.branch_address1,b.branch_address2,b.branch_address3,b.branch_pin,b.branch_Services,b.branch_neftifsccode,c.city_place FROM tb_branchdetails b inner join tb_citymaster c on b.branch_city_id = c.city_id where b.branch_micr = '".$arrChqData[$i][2]."'");					
+						// $branchDetails = $db->get_row("SELECT b.branch_name,b.branch_telephone1,b.branch_telephone2,b.branch_address1,b.branch_address2,b.branch_address3,b.branch_pin,b.branch_Services,b.branch_neftifsccode,c.city_place FROM tb_branchdetails b inner join tb_citymaster c on b.branch_city_id = c.city_id where b.branch_micr = '".$arrChqData[$i][2]."'");	
+						$branchDetails = $db->get_row("SELECT b.branch_name, b.branch_telephone1, b.branch_telephone2, b.branch_address1, b.branch_address2, b.branch_address3, b.branch_pin, b.branch_Services, b.branch_neftifsccode, b.sub_branch_code, c.city_place 
+                                FROM tb_branchdetails b 
+                                INNER JOIN tb_citymaster c ON b.branch_city_id = c.city_id 
+                                WHERE b.branch_micr = '".$arrChqData[$i][2]."'");
 						$pdf->Text($branchX, $arrPos[$i]["BankAddrY"], "BRANCH - ".$branchDetails->branch_name.": ".$branchDetails->branch_address1.",");
 						$y = $arrPos[$i]["BankAddrY"] + 2.5;
 

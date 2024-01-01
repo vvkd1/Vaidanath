@@ -273,7 +273,7 @@ authentication_print();
 			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 		}
 		xmlhttp.onreadystatechange=function()
-		{
+		{3
 			if (xmlhttp.readyState==4 && xmlhttp.status==200)
 			{
 				var totalresponse = xmlhttp.responseText.split("@");
@@ -282,20 +282,23 @@ authentication_print();
 				document.getElementById("divBranchCode").innerHTML="";
 				document.getElementById("divBranchCode").innerHTML=totalresponse[0];
 
+				document.getElementById("divSubBranchCode").innerHTML = "";
+              document.getElementById("divSubBranchCode").innerHTML= totalresponse[2];
+
 				document.getElementById("divCityCode").innerHTML="";
 				document.getElementById("divCityCode").innerHTML=totalresponse[1];
 
 				document.getElementById("divNEFTCode").innerHTML="";
-				document.getElementById("divNEFTCode").innerHTML=totalresponse[2];
+				document.getElementById("divNEFTCode").innerHTML=totalresponse[3];
 
-				document.getElementById("divSubBranchCode").innerHTML = "";
-              document.getElementById("divSubBranchCode").value = totalresponse[3];
+			 
 			
 				$('#hidden_addressl1').val(totalresponse[3]); 
 				$('#hidden_addressl2').val(totalresponse[4]);
 				$('#hidden_addressl3').val(totalresponse[5]);
 				$('#hidden_pincode').val(totalresponse[6]);
 				$('#hidden_city').val(totalresponse[7]);
+				// $('#hidden_subbranchCode').val(totalresponse[]);
 				
 				//document.getElementById("divsuburblist").innerHTML="";
 				//document.getElementById("divsuburblist").innerHTML=xmlhttp.responseText;
@@ -336,7 +339,7 @@ authentication_print();
 			$('#custACNoReq').hide();
 			$('#mircACNo').val('000'+$('#branchCode').val());
 
-			$('#subbranchcode').val($('#subbranchcode').val());
+			$('#subbranchCode').val($('#subbranchCode').val());
 
 			$('#signAuth1').val('Authorised Signatory');
 			$('#signAuth2').val('Authorised Signatory');
@@ -425,7 +428,7 @@ authentication_print();
 					$('#custMobNo').val(data.cps_act_mobile);
 					$('#custEmailId').val(data.cps_emailid);
 
-					$('#subbranchcode').val(data.cps_emailid);
+					$('#subbranchCode').val(data.sub_branch_code);
 
 				}
 				/*document.getElementById("divsuburblist").innerHTML="";
@@ -463,7 +466,7 @@ authentication_print();
 			  </tr>
 			  <tr>
 				<td align="left" valign="top">
-				<input type="hidden" name="branchid" id="branchid" value="<?php echo stripslashes($row-> branch_id); ?>" style="width:373px;" />
+				<input type="hidden" name="branchid" id="branchid" value="<?php echo stripslashes($row-> branch_id);?>" style="width:373px;" />
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						
 				  <tr>
@@ -477,6 +480,7 @@ authentication_print();
 					  <input type="hidden" name="hidden_addressl3" id="hidden_addressl3" value="">	
 					  <input type="hidden" name="hidden_city" id="hidden_city" value="">	
 					  <input type="hidden" name="hidden_pincode" id="hidden_pincode" value="0">	
+					  <input type="hidden" name="hidden_subbranchCode" id="hidden_subbranchCode" value="0">	
 					<tr>
 						<td height="35" align="left" valign="top" width="20%"><label>Bank Name</label>
 						</td>
@@ -496,7 +500,7 @@ authentication_print();
 											$rowgetbranch =  $db->get_results("select branch_id,branch_name from tb_branchdetails");
 											foreach($rowgetbranch as $eachbranch){
 										?>
-											<option value="<?php echo $eachbranch->branch_id; ?>"><?php echo $eachbranch->branch_name; ?></option>
+											<option value="<?php echo $eachbranch->branch_id; ?>"><?php echo $eachbranch->branch_name;?></option>
 										<?php 
 											} 
 										?>
